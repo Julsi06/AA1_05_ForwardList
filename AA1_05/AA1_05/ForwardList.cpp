@@ -30,10 +30,7 @@ void ForwardList::PushBack(int value)
 
 void ForwardList::PopBack()
 {
-	if (IsEmpty())
-	{
-		return;
-	}
+	if (IsEmpty()) return;
 	if (m_first == m_last)
 	{
 		delete m_first;
@@ -73,10 +70,7 @@ void ForwardList::PushFront(int value)
 
 void ForwardList::PopFront()
 {
-	if (IsEmpty())
-	{
-		return;
-	}
+	if (IsEmpty()) return;
 	if (m_first == m_last)
 	{
 		delete m_first;
@@ -99,11 +93,13 @@ bool ForwardList::IsEmpty() const
 
 int ForwardList::Front() const
 {
+	if (IsEmpty()) throw std::runtime_error("List is empty");
 	return m_first->m_value;
 }
 
 int ForwardList::Back() const
 {
+	if (IsEmpty()) throw std::runtime_error("List is empty");
 	return m_last->m_value;
 }
 
@@ -114,15 +110,77 @@ int ForwardList::Size() const
 
 void ForwardList::Erase(int value)
 {
-	
+	Node* currNode = m_first;
+	Node* prevNode = nullptr;
+	while (currNode != nullptr)
+	{
+		if (currNode->m_value == value)
+		{
+			Node* nodeToRemove = currNode;
+			if (currNode == m_first)
+			{
+				m_first = currNode->m_next;
+				if (currNode == m_last) m_last = nullptr;
+			}
+			else
+			{
+				prevNode->m_next = currNode->m_next;
+				if (currNode == m_last) m_last = prevNode;
+			}
+			currNode = currNode->m_next;
+			delete nodeToRemove;
+			--m_size;
+		}
+		else
+		{
+			prevNode = currNode;
+			currNode = currNode->m_next;
+		}
+	}
 }
 
 void ForwardList::Insert(int value, int position)
 {
-
+	if (position <= 0) PushFront(value);
+	else if (position >= m_size) PushBack(value);
+	else
+	{
+		Node* tempNode = m_first;
+		for (int i = 0;i < position - 1;++i)
+		{
+			tempNode = tempNode->m_next;
+		}
+		Node* newNode = new Node(value, tempNode->m_next);
+		tempNode->m_next = newNode;
+		++m_size;
+	}
 }
 
 void ForwardList::PushBackAverageNode()
+{
+	int sum = 0;
+	Node* tempNode = m_first;
+	for (int i = 0;i < m_size;++i)
+	{
+		sum += tempNode->m_value;
+		tempNode = tempNode->m_next;
+	}
+	int avg = sum / m_size;
+	PushBack(avg);
+	++m_size;
+}
+
+bool operator==(const ForwardList& l1, const ForwardList& l2)
+{
+
+}
+
+ForwardList ForwardList::operator+(const ForwardList& l)
+{
+
+}
+
+std::ostream& operator<<(std::ostream& o, const ForwardList& l)
 {
 
 }

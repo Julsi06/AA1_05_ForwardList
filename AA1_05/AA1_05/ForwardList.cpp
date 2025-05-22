@@ -9,7 +9,7 @@ ForwardList::ForwardList()
 
 ForwardList::~ForwardList()
 {
-
+	while (IsEmpty()) PopFront();
 }
 
 void ForwardList::PushBack(int value)
@@ -172,15 +172,37 @@ void ForwardList::PushBackAverageNode()
 
 bool operator==(const ForwardList& l1, const ForwardList& l2)
 {
-
+	if (l1.Size() != l2.Size()) return false;
+	ForwardList::Node* node1 = l1.m_first;
+	ForwardList::Node* node2 = l2.m_first;
+	for (int i = 0;i < l1.Size();++i)
+	{
+		if (node1->m_value != node2->m_value) return false;
+		node1 = node1->m_next;
+		node2 = node2->m_next;
+	}
+	return true;
 }
 
 ForwardList ForwardList::operator+(const ForwardList& l)
 {
-
+	ForwardList newList;
+	Node* newNode = l.m_first;
+	for (int i = 0;i < l.Size();++i)
+	{
+		newList.PushBack(newNode->m_value);
+		newNode = newNode->m_next;
+	}
+	return newList;
 }
 
 std::ostream& operator<<(std::ostream& o, const ForwardList& l)
 {
-
+	ForwardList::Node* newNode = l.m_first;
+	for (int i = 0;i < l.Size();++i)
+	{
+		o << newNode->m_value << "-";
+		newNode = newNode->m_next;
+	}
+	return o;
 }
